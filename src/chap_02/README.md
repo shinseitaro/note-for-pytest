@@ -2,30 +2,37 @@
 
 [Python Testing with pytest, Second Edition: Simple, Rapid, Effective, and Scalable by Brian Okken](https://pragprog.com/titles/bopytest2/python-testing-with-pytest-second-edition/)
 
-```bash
-pip install code/cards_proj/
+## 2022/11/30 yattom さんの話
++ Chapter02に全てが書いてある
++ その後は、その他便利な使い方が書いてある
++ フィクスチャはとてもよい
++ 7章はPytestの話ではなく、テストの考え方。テスターとプログラマーの橋渡しになる章
 
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-black 22.10.0 requires click>=8.0.0, but you have click 7.1.2 which is incompatible.
-```
+## 以下メモ
 
-venv 作り直してインストールしなおし
++ インストール時エラー
+    ```bash
+    pip install code/cards_proj/
+
+    ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+    black 22.10.0 requires click>=8.0.0, but you have click 7.1.2 which is incompatible.
+    ```
+    - card をインストールする前に、blackをインストールしてたら↑のエラーがでたので、venv 作り直してインストールしなおしました。
 
 
-`db.py` 
-
-- [Welcome to TinyDB! — TinyDB 4.7.0 documentation](https://tinydb.readthedocs.io/en/latest/)
-    - sqlite3 の ドキュメント指向(Document Oriented あらゆるドキュメントを格納可) DBという感じ
+- `db.py` 
+    - [Welcome to TinyDB! — TinyDB 4.7.0 documentation](https://tinydb.readthedocs.io/en/latest/)
+        - sqlite3 の ドキュメント指向(Document Oriented あらゆるドキュメントを格納可) DBという感じ
 
 - `api.py`
-```python 
-@dataclass
-class Card:
-    summary: str = None
-    owner: str = None
-    state: str = "todo"
-    id: int = field(default=None, compare=False)
-```
+    ```python 
+    @dataclass
+    class Card:
+        summary: str = None
+        owner: str = None
+        state: str = "todo"
+        id: int = field(default=None, compare=False)
+    ```
     - カードオブジェクト同士が同じかどうかを確認する時に、 **`id` は使わない** ようにするために、field メソッドを使って、 option `compare=False` を渡している
 
 `-vv`
@@ -81,7 +88,7 @@ class Card:
     ```
     + その他一部実行方法は P30 参照
 
-- 問題：
+## 章末問題
 1. 
     ```python
     @dataclass
