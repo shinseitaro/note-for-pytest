@@ -35,7 +35,7 @@
     ```
     - カードオブジェクト同士が同じかどうかを確認する時に、 **`id` は使わない** ようにするために、field メソッドを使って、 option `compare=False` を渡している
 
-`-vv`
+- `-vv`
     ```
     pytest src/chap_02/test_card_fail.py -vv
     ```
