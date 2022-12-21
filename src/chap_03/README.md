@@ -75,7 +75,7 @@ def test_some_data(some_data):
         cards_db.add_card(cards.Card("second"))
         assert cards_db.count() == 2
     ```
-+ テストの独立性は保てるけど、時間がかかる事もある。そういう場合は `@pytest.fixture(scope="スコープ名")` でスコープ指定
++ `@pytest.fixture(scope="スコープ名")` でスコープ指定出来る
 + デフォルトは `scope="function"` 
     ```python 
     @pytest.fixture(scope="module")
@@ -116,7 +116,7 @@ def test_some_data(some_data):
 
 ### `conftest.py` にフィクスチャを書くと、複数のテストモジュールで使用可
 + 複数のテストファイルでフィクスチャを共有したい場合 `conftest.py` にフィクスチャを定義
-+ 注意： pytest が `conftest.py` を探すので ** `conftest.py` を import して使う事はしない**
++ 注意： pytest が `conftest.py` を探すので **`conftest.py`を import して使う事はしない**
 + 探す場所は、
     + テスト関数と同じディレクトリ
     + テストルートからテスト関数までの親ディレクトリ
