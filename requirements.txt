@@ -3,3 +3,4 @@ pytest
 # black 
 # flake8
 jupyter
+git+https://github.com/fin-py/connpass-client.git
