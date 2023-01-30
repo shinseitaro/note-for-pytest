@@ -2,3 +2,4 @@ pytest
 # isort 
 # black 
 # flake8
+jupyter

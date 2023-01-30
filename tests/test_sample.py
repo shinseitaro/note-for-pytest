@@ -14,4 +14,4 @@ cli = ConnpassClient()
 series_id = "5944"
 data = cli.get(series_id=series_id)
 
-pprint(data.keys())
+# pprint(data.keys())
