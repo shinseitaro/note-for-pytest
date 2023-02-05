@@ -7,13 +7,13 @@ from connpass_client import ConnpassClient, Writer, io
 
 
 # セッションごとに必ず５秒スリープ
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=True, scope="module")
 def sleep():
     print("auto sleep: waiting for 5 sec...\n")
     time.sleep(5)
     
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def an_event_data():
     # 上記でSleepしてるので不要
     # print("waiting for 5 sec...\n")
@@ -23,7 +23,7 @@ def an_event_data():
     yield data
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def some_events_data():
     cli = ConnpassClient()
 
