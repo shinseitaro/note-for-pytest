@@ -1,8 +1,8 @@
-from connpass_client import ConnpassClient, io
+import csv
 from pprint import pprint
-import csv 
 
-import pytest 
+import pytest
+from connpass_client import ConnpassClient, io
 
 # 練習課題
 # 一つのイベントリクエストに対するテスト
@@ -105,7 +105,7 @@ def test_no3_6(some_events_data):
 # events の配列データは、開催日時順が降順(新着順)である
 def test_no3_7(some_events_data):
     from datetime import datetime
-    
+
     # これ chatgpt に書いてもらった
     def _is_descending_order(dates_list):
       return all(dates_list[i] >= dates_list[i+1] for i in range(len(dates_list) - 1))
