@@ -1,6 +1,7 @@
 pytest
+packaging # chapter 06 で使用
 # isort 
 # black 
 # flake8
-jupyter
-git+https://github.com/fin-py/connpass-client.git
+# jupyter
+# git+https://github.com/fin-py/connpass-client.git
