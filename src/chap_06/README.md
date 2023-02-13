@@ -129,8 +129,124 @@
     +  `strict=True` の場合、テストが失敗しているので `FAILURES` に詳細が出る
 
 
-
 ## カスタムマーカー
++ 使いみち：ただ単に、テストにラベルやタグのようなものをつけたい。
++ 例：[スモークテスト](https://e-words.jp/w/%E3%82%B9%E3%83%A2%E3%83%BC%E3%82%AF%E3%83%86%E3%82%B9%E3%83%88.html)
+    + スモークテストとは、もともと電子機器・電気機械の開発工程において、試作品の電源を投入してみて発煙しないか調べる試験。転じて、ソフトウェアでは、追加機能が既存機能を破壊していないかどうかなどの基本的なテストのことを言う
+- `src/chap_06/smoke/test_smoke.py`
+    ```python
+    from pathlib import Path
+    from tempfile import TemporaryDirectory
+
+    import pytest
+    from cards import Card, CardsDB, InvalidCardId
+
+
+    @pytest.fixture()
+    def cards_db():
+        with TemporaryDirectory() as db_dir:
+            db_path = Path(db_dir)
+            db = CardsDB(db_path)
+            # ここで cards_dbデータは したのtest_empty に渡されて、テストが終わったらココに戻ってくる
+            yield db 
+
+            # 事後処理
+            db.close()
+
+    @pytest.mark.smoke ## たんなるラベルとして使用。ネーミングはご自由に
+    def test_start(cards_db):
+        i = cards_db.add_card(Card("foo", state="todo"))
+        cards_db.start(i)
+        c = cards_db.get_card(i)
+        assert c.state == "in prog"
+
+    def test_start_nonexistent(cards_db):
+        n = 123 
+        with pytest.raises(InvalidCardId):
+            cards_db.start(n)        
+    ```
+    - 実行 `-m smoke` でカスタムマーカーをつけたテストだけ実行できる
+
+    ```
+    ✗  pytest test_smoke.py -v -m smoke
+    ===================================== test session starts ======================================
+    collected 2 items / 1 deselected / 1 selected                                                  
+
+    test_smoke.py::test_start PASSED                                                         [100%]
+
+    ======================================= warnings summary =======================================
+    test_smoke.py:19
+    src/chap_06/smoke/test_smoke.py:19: PytestUnknownMarkWarning: Unknown pytest.mark.smoke - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+        @pytest.mark.smoke ## たんなるラベルとして使用。ネーミングはご自由に
+
+    -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+    ========================== 1 passed, 1 deselected, 1 warning in 0.04s ==========================
+
+    ```    
+    +  `collected 2 items / 1 deselected / 1 selected ` と表示されている通り、smoke だけ実行された
+    + `Unknown pytest.mark.smoke - is this a typo?  ` ：登録されていないカスタムマーカーはこのように警告が出る。登録は pytest.ini で行う
+### pytest.ini
++ 設置場所はテストファイルがあるディレクトリ以上
++ 今回はchap06に置いた
++  `src/chap_06/pytest.ini`
+    ```ini
+    [pytest]
+    markers = 
+        smoke: subset of tests
+    ``` 
+### マーカーは複数つけることができる
+```python 
+@pytest.mark.<marker-name1>
+@pytest.mark.<marker-name2>
+def test_a():
+    ....
+```
+
+### ファイルにカスタムマーカーをつける
+```python 
+# test_afile.py
+import pytest
+from cards import Card
+
+pytestmark = pytest.mark.<marker-name>
+# リストも可
+pytestmark = [pytest.mark.<marker-name1>, pytest.mark.<marker-name2>, pytest.mark.<marker-name3>]
+```
+
+### クラスにカスタムマーカーをつける
+```python 
+import pytest
+from cards import Card
+
+@pytest.mark.<marker-name>
+class TestSomething:
+    def test_a():
+        ....
+```
+### パラメタライズの一部にカスタムマーカーをつける
+```python 
+@pytest.mark.parametrize(
+    ["summary", "status"],  
+    [
+        ("write a book", "done"),  
+        pytest.param(("second edition", "in prog"), marks=pytest.mark.<marker-name>)
+        ("create a course", "todo"),
+    ],
+)
+def test_finish(cards_db, summary, status):
+    ...
+```
+
+### 実行時に、and or not () で、マーカーをフィルタリングする
+```bash
+# 
+pytest -v -m "marker-name1 and marker-name2"
+
+# name1 だけど name2 がついていないテストを実行
+pytest -v -m "marker-name1 and not marker-name2"
+
+
+```
+
 ## マーカーとフィクスチャ
-## pytest.ini
 
