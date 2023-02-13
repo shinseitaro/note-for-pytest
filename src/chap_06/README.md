@@ -103,7 +103,7 @@
         assert c1 == c2 
 
     # 失敗することを想定していたが成功したとき、XFAIL ではなく FAILED を出すデモ
-    @pytest.mark.xfail(reason="xfail strict test", strict=True)
+    @pytest.mark.xfail(reason="失敗予定が成功したのでテストはFAILED", strict=True)
     def test_xfail_strict():
         c1 = Card("A")
         c2 = Card("A")
