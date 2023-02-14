@@ -1,6 +1,7 @@
 pytest
 packaging # chapter 06 で使用
-# isort 
+Faker # chapter 06 で使用
+# isort  
 # black 
 # flake8
 # jupyter
