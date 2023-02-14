@@ -249,4 +249,112 @@ pytest -v -m "marker-name1 and not marker-name2"
 ```
 
 ## マーカーとフィクスチャ
++ カスタムマーカは、パラメータを受け付けない
++ よって、パラメータを渡したい場合はフィクスチャとの組み合わせが必要
++ 例：
+    + cards を db に n 個つくってカウントしたら n 個であるテストなど
++ イメージ：
+    ```python 
+    @pytest.mark.num_cards(3)
+    def test_numcards(cards_db):
+        assert cards_db.count() == 3
+    ```
++ 手順
+    1. フィクスチャを使うテストを作成
+    1. マーカーを宣言
+    1. フィクスチャを書き換えて、該当のマーカーが使用されたかどうかを検出するように更新
+    1. マーカーにパラメータとして渡された値を読み取り、パラメータを使う
+    + メモ：フェイクデータを作成する pytest フィクスチャを提供する、[Faker](https://pypi.org/project/Faker/)パッケージを使ってみます
+
+### 1. フィクスチャを使うテストを作成 ＆ 2. マーカーを宣言
+```python 
+import pytest
+from cards import Card, CardsDB
+
+
+@pytest.fixture(scope="session")
+def tmp_db_path(tmp_path_factory):
+    return tmp_path_factory.mktemp("cards_db")
+
+
+@pytest.fixture(scope="session")
+def session_cards_db(tmp_db_path):
+    db_ = CardsDB(tmp_db_path)
+    yield db_
+    db_.close()
+
+@pytest.fixture(scope="function")
+def cards_db(db):  
+    return db
+
+@pytest.mark.num_cards(3)
+def test_numcards(cards_db):
+    assert cards_db.count() == 3
+```
+typo だよって言われないように pytest.ini にも追加
+```ini
+[pytest]
+markers = 
+    smoke: subset of tests
+    num_cards: number of card to prefill for cards_db fixture
+```
+### 3. フィクスチャを書き換えて、該当のマーカーが使用されたかどうかを検出するように更新
+```python 
+@pytest.fixture(scope="function")
+def cards_db(session_cards_db, request, faker):
+    db = session_cards_db
+    # 一旦DBを空にする
+    db.delete_all()
+    # 乱数作成
+    faker.seed_instance(101)
+    m = request.node.get_closest_marker("num_cards")
+    if m and len(m.args) > 0:
+        num_cards = m.args[0]
+        for _ in range(num_cards):
+            db.add_card(
+                Card(summary=faker.sentence(), 
+                     owner=faker.first_name())
+            )
+    return db
+```
+` m = request.node.get_closest_marker("num_cards")` これでこのようなオブジェクトをえることができる
+```
+Mark(name='num_cards', args=(3,), kwargs={})
+```
+よって、 `m.args` で、最初の引数を得ることができる
+
+### 4. マーカーにパラメータとして渡された値を読み取り、パラメータを使う
+
+```python 
+@pytest.mark.num_cards(3)
+def test_numcards(cards_db):
+    assert cards_db.count() == 3
+    # faker が作ったデータを確認してみる
+    for c in cards_db.list_cards():
+        print(c)
+```
+```bash
+pytest -s -v
+================================================ test session starts ================================================
+plugins: Faker-17.0.0
+collected 1 item                                                                                                    
+
+Card(summary='Suggest training much grow any me own true.', owner='Todd', state='todo', id=1)
+Card(summary='Forget just effort claim knowledge.', owner='Amanda', state='todo', id=2)
+Card(summary='Line for PM identify decade.', owner='Russell', state='todo', id=3)
+PASSED
+
+================================================= 1 passed in 0.06s =================================================
+```
+
+
+## その他のメモ
++ `pytest --markers` で配下で使ってるマーカーを確認できます
++ `pytest.ini` に下記を追加しておくことも可
+    ```ini
+    addopts = 
+        --strict-markers # フラグ。宣言されていないマーカーを使っている場合はエラーを返す
+        --ra # フラグ。テストが成功しない理由を出力
+    xfail_strict = true # xfail を参照
+    ```
 
