@@ -5,7 +5,7 @@
     + `pytest.ini` 以外では、以下のいずれかのファイルが使える
         + `pypoject.toml`
         + `tox.ini`
-        + `setup.config` 
+        + `setup.cfg` 
     - 設定ファイルが設置されているディレクトリがルートディレクトリ(rootdir)
     - 設定には、`addopts` などのオプションやフラグも設定できる
 1. `conftest.py` に記述したフィクスチャやフック関数は、設置したディレクトリ配下（サブディレクトリも含む）で共有できる
@@ -102,7 +102,7 @@ markers = [
 
 ```
 
-#### `setup.config` 
+#### `setup.cfg` 
 ```ini 
 [tool:pytest] ; ココが違うだけで後は pytest.iniと同じ
 addopts =
