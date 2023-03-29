@@ -2,7 +2,7 @@
 
 ## まとめ
 1. 設定ファイルは `pytest.ini`
-    + `pytest.ini` 以外のファイル名なら、以下のいずれか
+    + `pytest.ini` 以外では、以下のいずれかのファイルが使える
         + `pypoject.toml`
         + `tox.ini`
         + `setup.config` 
@@ -20,7 +20,7 @@ cards_proj
 └── tests
     ├── api
     │   ├── __init__.py # 設置しておくと同名のテストファイルを設定可
-    │   ├── conftest.py # フィクスチャやフック関数設置。同列配下の全テストに有効
+    │   ├── conftest.py 
     │   ├── sub
     │   │   └── test_sub_api.py
     │   └── test_api1.py 
@@ -30,9 +30,10 @@ cards_proj
     │   ├── conftest.py
     │   └── test_cli1.py
     │   └── test_hoge.py # 同名ファイル
-    └── conftest.py
+    └── conftest.py # フィクスチャやフック関数設置。同列配下の全テストに有効
 ```
-### pytest.ini
+### 書き方
+#### `pytest.ini`
 
 ```ini
 [pytest] ; 先頭に明記
@@ -57,62 +58,62 @@ markers = ; マーカーは一行の１つずつ
     - `--strict-config` ：設定ファイルの解析で例外があれば出す（デフォルトは警告）
     - `-ra` ：サマリーを表示（デフォルトはテストの失敗とエラーに関する情報のみ）
 
-### conftest.py
+#### `conftest.py`
 + Chapter3参照
 + （フック関数は chapter 15）
 
-### __init__.py
+#### `__init__.py`
 + 重複するテストファイル名を使えるようにする
 + 設定しないと、同じ名前のファイルがあるから名前変更して、というエラーメッセージが出る。
 
 ### その他の設定ファイル
-+ `tox.ini`
-    ```tox 
-    [tox]
-    ; toxでの設定を書く。Chapter11に詳細あり
+#### `tox.ini`
+```tox 
+[tox]
+; toxでの設定を書く。Chapter11に詳細あり
 
-    [pytest]
-    addopts =
-        --strict-markers
-        --strict-config
-        -ra
+[pytest]
+addopts =
+    --strict-markers
+    --strict-config
+    -ra
 
-    testpaths = tests
+testpaths = tests
 
-    markers =
-        smoke: subset of tests
-        exception: check for expected exceptions
-    ```
-+ `pypoject.toml`
-    ```toml
-    [tool.pytest.ini_options] # セクション始まり
-    addopts = [ # リストで指定
-        "--strict-markers", # 設定値は "" で囲む
-        "--strict-config",
-        "-ra"
-        ]
-
-    testpaths = "tests"
-
-    markers = [
-        "smoke: subset of tests",
-        "exception: check for expected exceptions"
+markers =
+    smoke: subset of tests
+    exception: check for expected exceptions
+```
+#### `pypoject.toml`
+```toml
+[tool.pytest.ini_options] # セクション始まり
+addopts = [ # リストで指定
+    "--strict-markers", # 設定値は "" で囲む
+    "--strict-config",
+    "-ra"
     ]
 
-    ```
+testpaths = "tests"
 
-+ `setup.config` 
-    ```ini 
-    [tool:pytest] ; ココが違うだけで後は pytest.iniと同じ
-    addopts =
-        --strict-markers
-        --strict-config
-        -ra
+markers = [
+    "smoke: subset of tests",
+    "exception: check for expected exceptions"
+]
 
-    testpaths = tests
+```
 
-    markers =
-        smoke: subset of tests
-        exception: check for expected exceptions
+#### `setup.config` 
+```ini 
+[tool:pytest] ; ココが違うだけで後は pytest.iniと同じ
+addopts =
+    --strict-markers
+    --strict-config
+    -ra
 
-    ```
+testpaths = tests
+
+markers =
+    smoke: subset of tests
+    exception: check for expected exceptions
+
+```
