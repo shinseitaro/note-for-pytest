@@ -321,7 +321,7 @@ def cards_db(session_cards_db, request, faker):
 ```
 Mark(name='num_cards', args=(3,), kwargs={})
 ```
-よって、 `m.args` で、最初の引数を得ることができる
+よって、 `m.args[0]` で、最初の引数を得ることができる
 
 ### 4. マーカーにパラメータとして渡された値を読み取り、パラメータを使う
 
