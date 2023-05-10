@@ -6,3 +6,4 @@ Faker # chapter 06 で使用
 # flake8
 # jupyter
 # git+https://github.com/fin-py/connpass-client.git
+tox
