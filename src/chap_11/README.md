@@ -187,41 +187,41 @@ $ tox -c tox_multi-version.ini -p
 ### カバレッジレポートを tox に追加
 
 1. `tox_coverage.ini `
-  ```ini
-  [tox]
-  envlist = py38
-  isolated_build = True
+    ```ini
+    [tox]
+    envlist = py38
+    isolated_build = True
 
-  [testenv]
-  deps = 
-      pytest
-      faker
-      pytest-cov ; 追記
-  commands = pytest --cov=cards ; 追記
-  ```
+    [testenv]
+    deps = 
+        pytest
+        faker
+        pytest-cov ; 追記
+    commands = pytest --cov=cards ; 追記
+    ```
 1. `src/chap_11/cards_proj/.coveragerc` で、.tox 仮想環境下のどこに cards ディレクトリがあるかを教える。（テストする cards ツールは、.tox 仮想環境配下のものであるため）
-  ```ini
-  [paths]
-  source = 
-      src
-      .tox/*/site-packages
-  ```
+    ```ini
+    [paths]
+    source = 
+        src
+        .tox/*/site-packages
+    ```
+1. 実行
+    ```bash 
+    tox -c tox_coverage.ini 
 
-```bash 
-tox -c tox_coverage.ini 
+    ...
 
-...
-
------------ coverage: platform linux, python 3.8.3-final-0 -----------
-Name                                                      Stmts   Miss  Cover
------------------------------------------------------------------------------
-.tox/py38/lib/python3.8/site-packages/cards/__init__.py       3      0   100%
-.tox/py38/lib/python3.8/site-packages/cards/api.py           70      0   100%
-.tox/py38/lib/python3.8/site-packages/cards/cli.py           86      0   100%
-.tox/py38/lib/python3.8/site-packages/cards/db.py            23      0   100%
------------------------------------------------------------------------------
-TOTAL                                                       182      0   100%
-```
+    ----------- coverage: platform linux, python 3.8.3-final-0 -----------
+    Name                                                      Stmts   Miss  Cover
+    -----------------------------------------------------------------------------
+    .tox/py38/lib/python3.8/site-packages/cards/__init__.py       3      0   100%
+    .tox/py38/lib/python3.8/site-packages/cards/api.py           70      0   100%
+    .tox/py38/lib/python3.8/site-packages/cards/cli.py           86      0   100%
+    .tox/py38/lib/python3.8/site-packages/cards/db.py            23      0   100%
+    -----------------------------------------------------------------------------
+    TOTAL                                                       182      0   100%
+    ```
 
 ### カバレッジのベースラインを指定
 
