@@ -199,7 +199,6 @@ $ tox -c tox_multi-version.ini -p
       pytest-cov ; 追記
   commands = pytest --cov=cards ; 追記
   ```
-
 1. `src/chap_11/cards_proj/.coveragerc` で、.tox 仮想環境下のどこに cards ディレクトリがあるかを教える。（テストする cards ツールは、.tox 仮想環境配下のものであるため）
   ```ini
   [paths]
